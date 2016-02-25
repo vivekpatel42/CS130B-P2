@@ -43,11 +43,15 @@ int main()
 			printf("%d, %d\n", x, y);
 			lcsResult = findLCSLength(str1, str2, x, y);
 			printf("The longest common subsequence between %s and %s is of size %d.\n", str1, str2, lcsResult->lcsLength);
-			printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> length)[x][y]);
+			for (int row = 0; row <= x; row++)
+			{
+    		for(int columns = 0; columns <= y; columns++)
+         	printf("%d     ", (lcsResult -> length)[row][columns]);
+    		printf("\n");
+ 			}
+			printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
 		}
 	}
-
-	return 1;
 	for (int i = 0; i < x; i++) {
 		delete[] (lcsResult -> length)[i];
 		delete[] (lcsResult -> direction)[i];
@@ -66,10 +70,10 @@ LCS_PTR findLCSLength(char* m, char* n, int x, int y) {
 		lengthMatrix[i] = new int[y + 1];
 		directionalMatrix[i] = new char[y + 1];
 	}
-	for (int i = 1; i <= x; i++) {
+	for (int i = 0; i <= x; i++) {
 		lengthMatrix[i][0] = 0;
 	}
-	for (int j = 1; j <= y; j++) {
+	for (int j = 0; j <= y; j++) {
 		lengthMatrix[0][j] = 0;
 	}
 	for (int i = 1; i <= x; i++) {
@@ -107,8 +111,10 @@ void printLCS(char** dMatrix, char* str, int i, int j, int index) {
 	{
 		if (dMatrix[i][j] == 'D')
 		{
-			lcs[index - 1] = str[i - 1]; // Put current character in result
-			i--; j--; index--;     // reduce values of i, j and index
+			lcs[index - 1] = str[i - 1];
+			i--; 
+			j--; 
+			index--;     
 		}
 		else if (dMatrix[i][j] == 'U')
 			i--;
