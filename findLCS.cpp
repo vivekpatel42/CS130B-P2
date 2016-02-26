@@ -14,6 +14,9 @@ typedef struct {
 
 LCS_PTR findLCSLength(char* m, char* n, int x, int y);
 void printLCS(char** dMatrix, char* str, int i, int j, int index);
+void findAllLCS(int** lMatrix, char** dMatrix, char* str1, char* str2, int x, int y); 
+void printLengthMatrix(int** c, char *string1, char *string2, int string1Size, int string2Size);
+void printDirectionMatrix(char** c, char *string1, char *string2, int string1Size, int string2Size);
 
 int main(int argc, char** argv)
 {
@@ -68,23 +71,10 @@ int main(int argc, char** argv)
 				str1 = strArr[0], str2 = strArr[1];
 				x = strlen(str1), y = strlen(str2);
 				lcsResult = findLCSLength(str1, str2, x, y);
-				printf("%d ", lcsResult->lcsLength);
+				printf("%d --> ", lcsResult->lcsLength);
 				printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
-				printf("(%s, %s)\n", str1, str2);
-				for (int row = 0; row <= x; row++)
-				{
-					for (int columns = 0; columns <= y; columns++)
-						printf("%c   ", (lcsResult -> direction)[row][columns]);
-					printf("\n");
-				}
-				printf("\n");
-				for (int row = 0; row <= x; row++)
-				{
-					for (int columns = 0; columns <= y; columns++)
-						printf("%d   ", (lcsResult -> length)[row][columns]);
-					printf("\n");
-				}
-				printf("\n");
+				printLengthMatrix(lcsResult -> length, str1, str2, x, y);
+				printDirectionMatrix(lcsResult -> direction, str1, str2, x, y);
 			}
 		}
 	}
@@ -161,3 +151,54 @@ void printLCS(char** dMatrix, char* str, int i, int j, int index) {
 	}
 	printf("%s\n", lcs);
 }
+
+void findAllLCS(int** lMatrix, char** dMatrix, char* str1, char* str2, int x, int y) 
+{
+	
+}
+
+void printLengthMatrix(int** c, char *string1, char *string2, int string1Size, int string2Size){
+	printf("   ");
+	for(int i=1; i<= string2Size; i++){
+		printf("  %c", string2[i-1]);
+	}
+	printf("\n");
+	for(int i=0; i <= string1Size; i++){
+		if(i == 0){
+			printf(" ");
+		}else{
+			printf("%c", string1[i-1]);
+		}
+		for(int j=0; j<= string2Size; j++){
+			printf("|%d|", c[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n\n");
+	return;
+}
+
+void printDirectionMatrix(char** c, char *string1, char *string2, int string1Size, int string2Size){
+	printf("   ");
+	for(int i=1; i<= string2Size; i++){
+		printf("  %c", string2[i-1]);
+	}
+	printf("\n");
+	for(int i=0; i <= string1Size; i++){
+		if(i == 0){
+			printf(" ");
+		}else{
+			printf("%c", string1[i-1]);
+		}
+		for(int j=0; j<= string2Size; j++){
+			if (c[i][j] != '\0')
+				printf("|%c|", c[i][j]);
+			else
+				printf("|x|");
+		}
+		printf("\n");
+	}
+	printf("\n-------------------------------------\n");
+	return;
+}
+
