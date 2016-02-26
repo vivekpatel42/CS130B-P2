@@ -15,41 +15,93 @@ typedef struct {
 LCS_PTR findLCSLength(char* m, char* n, int x, int y);
 void printLCS(char** dMatrix, char* str, int i, int j, int index);
 
-int main()
+int main(int argc, char** argv)
 {
 	int n, k, x, y, i = 0;
 	string line;
 	char *token, *tempStr;
 	char* strArr[2], *str1, *str2;
 	LCS_PTR lcsResult = new LCS;
-	while (getline(cin, line))
-	{
-		k = 0;
-		if (i == 0) {
-			n = atoi(line.c_str());
-			i++;
-		}
-		else {
-			tempStr = new char[line.size() + 1];
-			strcpy(tempStr, line.c_str());
-			token = strtok(tempStr, " ");
-			while (token != NULL) {
-				strArr[k++] = token;
-				token = strtok(NULL, " ");
+
+	// If statement checks to see what LCS we want to find (singular or all).
+	if(argc == 2 && strcmp(argv[1], "-all") == 0) {
+		while (getline(cin, line))
+		{
+			k = 0;
+			if (i == 0) {
+				n = atoi(line.c_str());
+				i++;
 			}
-			str1 = strArr[0], str2 = strArr[1];
-			printf("%s %s\n", str1, str2);
-			x = strlen(str1), y = strlen(str2);
-			printf("%d, %d\n", x, y);
-			lcsResult = findLCSLength(str1, str2, x, y);
-			printf("The longest common subsequence between %s and %s is of size %d.\n", str1, str2, lcsResult->lcsLength);
-			for (int row = 0; row <= x; row++)
-			{
-    		for(int columns = 0; columns <= y; columns++)
-         	printf("%d     ", (lcsResult -> length)[row][columns]);
-    		printf("\n");
- 			}
-			printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
+			else {
+				tempStr = new char[line.size() + 1];
+				strcpy(tempStr, line.c_str());
+				token = strtok(tempStr, " ");
+				while (token != NULL) {
+					strArr[k++] = token;
+					token = strtok(NULL, " ");
+				}
+				str1 = strArr[0], str2 = strArr[1];
+				x = strlen(str1), y = strlen(str2);
+				lcsResult = findLCSLength(str1, str2, x, y);
+				printf("%d ", lcsResult->lcsLength);
+				printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
+				printf("(%s, %s)\n", str1, str2);
+				for (int row = 0; row <= x; row++)
+				{
+					for (int columns = 0; columns <= y; columns++)
+						printf("%c   ", (lcsResult -> direction)[row][columns]);
+					printf("\n");
+				}
+				printf("\n");
+				for (int row = 0; row <= x; row++)
+				{
+					for (int columns = 0; columns <= y; columns++)
+						printf("%d   ", (lcsResult -> length)[row][columns]);
+					printf("\n");
+				}
+				printf("\n");
+			}
+		}
+	}
+
+	// Runs in the case that user wants LCS length and singular printed LCS.
+	else if (argc == 1) {
+		while (getline(cin, line))
+		{
+			k = 0;
+			if (i == 0) {
+				n = atoi(line.c_str());
+				i++;
+			}
+			else {
+				tempStr = new char[line.size() + 1];
+				strcpy(tempStr, line.c_str());
+				token = strtok(tempStr, " ");
+				while (token != NULL) {
+					strArr[k++] = token;
+					token = strtok(NULL, " ");
+				}
+				str1 = strArr[0], str2 = strArr[1];
+				x = strlen(str1), y = strlen(str2);
+				lcsResult = findLCSLength(str1, str2, x, y);
+				printf("%d ", lcsResult->lcsLength);
+				printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
+				printf("(%s, %s)\n", str1, str2);
+				for (int row = 0; row <= x; row++)
+				{
+					for (int columns = 0; columns <= y; columns++)
+						printf("%c   ", (lcsResult -> direction)[row][columns]);
+					printf("\n");
+				}
+				printf("\n");
+				for (int row = 0; row <= x; row++)
+				{
+					for (int columns = 0; columns <= y; columns++)
+						printf("%d   ", (lcsResult -> length)[row][columns]);
+					printf("\n");
+				}
+				printf("\n");
+			}
 		}
 	}
 	for (int i = 0; i < x; i++) {
@@ -112,9 +164,9 @@ void printLCS(char** dMatrix, char* str, int i, int j, int index) {
 		if (dMatrix[i][j] == 'D')
 		{
 			lcs[index - 1] = str[i - 1];
-			i--; 
-			j--; 
-			index--;     
+			i--;
+			j--;
+			index--;
 		}
 		else if (dMatrix[i][j] == 'U')
 			i--;
