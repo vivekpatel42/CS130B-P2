@@ -3,6 +3,8 @@
 #include <string>
 #include <cstring>
 #include <sstream>
+#include <utility>
+#include <vector>
 
 using namespace std;
 
@@ -14,7 +16,7 @@ typedef struct {
 
 LCS_PTR findLCSLength(char* m, char* n, int x, int y);
 void printLCS(char** dMatrix, char* str, int i, int j, int index);
-void findAllLCS(int** lMatrix, char** dMatrix, char* str1, char* str2, int x, int y); 
+void findAllLCS(int** lMatrix, char** dMatrix, char* str1, char* str2, int x, int y, int maxSize); 
 void printLengthMatrix(int** c, char *string1, char *string2, int string1Size, int string2Size);
 void printDirectionMatrix(char** c, char *string1, char *string2, int string1Size, int string2Size);
 
@@ -26,56 +28,32 @@ int main(int argc, char** argv)
 	char* strArr[2], *str1, *str2;
 	LCS_PTR lcsResult = new LCS;
 
-	// If statement checks to see what LCS we want to find (singular or all).
-	if(argc == 2 && strcmp(argv[1], "-all") == 0) {
-		while (getline(cin, line))
-		{
-			k = 0;
-			if (i == 0) {
-				n = atoi(line.c_str());
-				i++;
-			}
-			else {
-				tempStr = new char[line.size() + 1];
-				strcpy(tempStr, line.c_str());
-				token = strtok(tempStr, " ");
-				while (token != NULL) {
-					strArr[k++] = token;
-					token = strtok(NULL, " ");
-				}
-				str1 = strArr[0], str2 = strArr[1];
-				x = strlen(str1), y = strlen(str2);
-				lcsResult = findLCSLength(str1, str2, x, y);
-				printf("%d \n", lcsResult->lcsLength);
-			}
-		}
-	}
-
 	// Runs in the case that user wants LCS length and singular printed LCS.
-	else if (argc == 1) {
-		while (getline(cin, line))
-		{
-			k = 0;
-			if (i == 0) {
-				n = atoi(line.c_str());
-				i++;
+	while (getline(cin, line))
+	{
+		k = 0;
+		if (i == 0) {
+			n = atoi(line.c_str());
+			i++;
+		}
+		else {
+			tempStr = new char[line.size() + 1];
+			strcpy(tempStr, line.c_str());
+			token = strtok(tempStr, " ");
+			while (token != NULL) {
+				strArr[k++] = token;
+				token = strtok(NULL, " ");
 			}
-			else {
-				tempStr = new char[line.size() + 1];
-				strcpy(tempStr, line.c_str());
-				token = strtok(tempStr, " ");
-				while (token != NULL) {
-					strArr[k++] = token;
-					token = strtok(NULL, " ");
-				}
-				str1 = strArr[0], str2 = strArr[1];
-				x = strlen(str1), y = strlen(str2);
-				lcsResult = findLCSLength(str1, str2, x, y);
-				printf("%d --> ", lcsResult->lcsLength);
-				printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
-				printLengthMatrix(lcsResult -> length, str1, str2, x, y);
-				printDirectionMatrix(lcsResult -> direction, str1, str2, x, y);
+			str1 = strArr[0], str2 = strArr[1];
+			x = strlen(str1), y = strlen(str2);
+			lcsResult = findLCSLength(str1, str2, x, y);
+			if(argc == 2 && strcmp(argv[1], "-all") == 0) {
+				findAllLCS(lcsResult -> length, lcsResult -> direction, str1, str2, x, y, lcsResult -> lcsLength);
 			}
+			printf("%d --> ", lcsResult->lcsLength);
+			printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
+			printLengthMatrix(lcsResult -> length, str1, str2, x, y);
+			printDirectionMatrix(lcsResult -> direction, str1, str2, x, y);
 		}
 	}
 
@@ -152,9 +130,21 @@ void printLCS(char** dMatrix, char* str, int i, int j, int index) {
 	printf("%s\n", lcs);
 }
 
-void findAllLCS(int** lMatrix, char** dMatrix, char* str1, char* str2, int x, int y) 
+void findAllLCS(int** lMatrix, char** dMatrix, char* str1, char* str2, int x, int y, int maxSize) 
 {
+	vector<vector<pair<int, int>>> result;
+	vector<pair<int, int>> temp;
+	for(int i = 1; i <= x; i++) {
+		for(int j = 1; j <= y; j++) {
+			if(lMatrix[i][j] > 0 && dMatrix[i][j] == 'D') {
+				temp.push_back(make_pair(i,j));
+			}
+		}
+	}
 	
+	for(int k = temp.size() - 1; k >= 0; k--) {
+		if(k == temp.size() - 1)
+	}
 }
 
 void printLengthMatrix(int** c, char *string1, char *string2, int string1Size, int string2Size){
