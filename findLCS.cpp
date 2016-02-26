@@ -43,23 +43,7 @@ int main(int argc, char** argv)
 				str1 = strArr[0], str2 = strArr[1];
 				x = strlen(str1), y = strlen(str2);
 				lcsResult = findLCSLength(str1, str2, x, y);
-				printf("%d ", lcsResult->lcsLength);
-				printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
-				printf("(%s, %s)\n", str1, str2);
-				for (int row = 0; row <= x; row++)
-				{
-					for (int columns = 0; columns <= y; columns++)
-						printf("%c   ", (lcsResult -> direction)[row][columns]);
-					printf("\n");
-				}
-				printf("\n");
-				for (int row = 0; row <= x; row++)
-				{
-					for (int columns = 0; columns <= y; columns++)
-						printf("%d   ", (lcsResult -> length)[row][columns]);
-					printf("\n");
-				}
-				printf("\n");
+				printf("%d \n", lcsResult->lcsLength);
 			}
 		}
 	}
@@ -104,6 +88,8 @@ int main(int argc, char** argv)
 			}
 		}
 	}
+
+	// Frees space allocated by program to prevent memory leaks and, finally, returns 0.
 	for (int i = 0; i < x; i++) {
 		delete[] (lcsResult -> length)[i];
 		delete[] (lcsResult -> direction)[i];
