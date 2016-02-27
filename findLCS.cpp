@@ -5,6 +5,9 @@
 #include <sstream>
 #include <utility>
 #include <vector>
+#include <set>
+#include <algorithm>
+#include <iterator>
 
 using namespace std;
 
@@ -16,7 +19,7 @@ typedef struct {
 
 LCS_PTR findLCSLength(char* m, char* n, int x, int y);
 void printLCS(char** dMatrix, char* str, int i, int j, int index);
-void findAllLCS(int** lMatrix, char** dMatrix, char* str1, char* str2, int x, int y, int maxSize); 
+void findAllLCS(int** lMatrix, char* str1, char* str2, int x, int y, string lcsSoFar, set<string>* mySet); 
 void printLengthMatrix(int** c, char *string1, char *string2, int string1Size, int string2Size);
 void printDirectionMatrix(char** c, char *string1, char *string2, int string1Size, int string2Size);
 
@@ -48,12 +51,19 @@ int main(int argc, char** argv)
 			x = strlen(str1), y = strlen(str2);
 			lcsResult = findLCSLength(str1, str2, x, y);
 			if(argc == 2 && strcmp(argv[1], "-all") == 0) {
-				findAllLCS(lcsResult -> length, lcsResult -> direction, str1, str2, x, y, lcsResult -> lcsLength);
+				string lcsSoFar("");
+				set<string>* mySet = new set<string>();
+				findAllLCS(lcsResult -> length, str1, str2, x, y, lcsSoFar, mySet);
+				set<string>::iterator it;
+				for (it = mySet -> begin(); it != mySet -> end(); ++it) {
+					cout << *it;
+				}
+				cout << endl;
 			}
-			printf("%d --> ", lcsResult->lcsLength);
-			printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
-			printLengthMatrix(lcsResult -> length, str1, str2, x, y);
-			printDirectionMatrix(lcsResult -> direction, str1, str2, x, y);
+			else {
+				printf("%d ", lcsResult->lcsLength);
+				printLCS(lcsResult -> direction, str1, x, y, (lcsResult -> lcsLength));
+			}
 		}
 	}
 
@@ -130,24 +140,35 @@ void printLCS(char** dMatrix, char* str, int i, int j, int index) {
 	printf("%s\n", lcs);
 }
 
-void findAllLCS(int** lMatrix, char** dMatrix, char* str1, char* str2, int x, int y, int maxSize) 
+void findAllLCS(int** lMatrix, char* str1, char* str2, int i, int j, string lcsSoFar, set<string>* mySet) 
 {
-	vector<vector<pair<int, int>>> result;
-	vector<pair<int, int>> temp;
-	for(int i = 1; i <= x; i++) {
-		for(int j = 1; j <= y; j++) {
-			if(lMatrix[i][j] > 0 && dMatrix[i][j] == 'D') {
-				temp.push_back(make_pair(i,j));
-			}
-		}
+	if(lMatrix[i][j] == 0) {
+		stringstream ss;
+		ss << "(" << lcsSoFar << ")\n";
+		mySet -> insert(ss.str());
+		return;
 	}
-	
-	for(int k = temp.size() - 1; k >= 0; k--) {
-		if(k == temp.size() - 1)
+	if(str1[i-1] == str2[j-1])
+	{
+		stringstream ss;			
+		if (lMatrix[i][j] > 1) {
+			ss << ", <" << i << ", " << j << ">" << lcsSoFar;
+		}
+		else {
+			ss << "<" << i << ", " << j << ">" << lcsSoFar;
+		}
+		findAllLCS(lMatrix, str1, str2, i-1, j-1, ss.str(), mySet);
+	}
+	if(lMatrix[i][j-1] == lMatrix[i][j]) {
+		findAllLCS(lMatrix, str1, str2, i, j-1, lcsSoFar, mySet);
+	}
+	if(lMatrix[i-1][j] == lMatrix[i][j]) {
+		findAllLCS(lMatrix, str1, str2, i-1, j, lcsSoFar, mySet);
 	}
 }
 
-void printLengthMatrix(int** c, char *string1, char *string2, int string1Size, int string2Size){
+/* Functions for printing the cost and direction matrices (for convenience of finding LCS all algorithm).
+void printLengthMatrix(int** c, char *string1, char *string2, int string1Size, int string2Size) {
 	printf("   ");
 	for(int i=1; i<= string2Size; i++){
 		printf("  %c", string2[i-1]);
@@ -191,4 +212,4 @@ void printDirectionMatrix(char** c, char *string1, char *string2, int string1Siz
 	printf("\n-------------------------------------\n");
 	return;
 }
-
+*/
